@@ -1,3 +1,6 @@
 <div>
-  <ngx-chess-board #board></ngx-chess-board>
+  <ngx-chess-board [darkDisabled]="this.chessProvider.type === 'w' || this.chessProvider.onePlayer"
+                   [lightDisabled]="this.chessProvider.type === 'b' || this.chessProvider.onePlayer"
+                   #board (moveChange)="boardChanged()">
+  </ngx-chess-board>
 </div>
