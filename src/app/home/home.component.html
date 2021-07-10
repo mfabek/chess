@@ -1,0 +1,8 @@
+<div>
+  <h1>Chess game</h1>
+  <form [formGroup]="form" (ngSubmit)="submitForm()">
+    <label for="name">Name of the game</label><br>
+    <input type="text" id="name" formControlName="name"><br>
+    <button [disabled]="form.invalid">Join</button>
+  </form>
+</div>
