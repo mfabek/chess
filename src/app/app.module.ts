@@ -9,6 +9,7 @@ import {ReactiveFormsModule} from '@angular/forms';
 import {HomeComponent} from './home/home.component';
 import {HttpClientModule} from '@angular/common/http';
 import {ToastrModule} from 'ngx-toastr';
+import { NzModalModule } from 'ng-zorro-antd/modal';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import {ToastrModule} from 'ngx-toastr';
     NgxChessBoardModule.forRoot(),
     ReactiveFormsModule,
     BrowserAnimationsModule,
-    ToastrModule.forRoot()
+    ToastrModule.forRoot(),
+    NzModalModule
   ],
   providers: [],
   bootstrap: [AppComponent]

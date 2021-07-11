@@ -1,6 +1,12 @@
-<div>
-  <ngx-chess-board [darkDisabled]="this.chessProvider.type === 'w' || this.chessProvider.onePlayer"
-                   [lightDisabled]="this.chessProvider.type === 'b' || this.chessProvider.onePlayer"
-                   #board (moveChange)="boardChanged()">
-  </ngx-chess-board>
+<div class="container">
+  <div class="div1">
+    <ngx-chess-board [darkDisabled]="this.chessProvider.type === 'w' || this.chessProvider.onePlayer"
+                     [lightDisabled]="this.chessProvider.type === 'b' || this.chessProvider.onePlayer"
+                     #board (moveChange)="boardChanged()">
+    </ngx-chess-board>
+    <br>
+    <div>
+      <button [hidden]="!checkmate">See all moves</button>
+    </div>
+  </div>
 </div>

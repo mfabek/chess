@@ -15,6 +15,7 @@ export class ChessComponent implements OnInit {
   timerSubscription: Subscription;
   timer2Subscription: Subscription;
   loading = false;
+  checkmate = false;
 
   constructor(public chessProvider: ChessProvider,
               private toastr: ToastrService) {
