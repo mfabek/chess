@@ -2,6 +2,7 @@
   <div class="div1">
     <ngx-chess-board [darkDisabled]="this.chessProvider.type === 'w' || this.chessProvider.onePlayer"
                      [lightDisabled]="this.chessProvider.type === 'b' || this.chessProvider.onePlayer"
+                     [showLastMove]="false"
                      #board (moveChange)="boardChanged()">
     </ngx-chess-board>
     <br>

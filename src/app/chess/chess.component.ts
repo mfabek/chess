@@ -28,7 +28,12 @@ export class ChessComponent implements OnInit {
           .subscribe((data) => {
             if (data === 2) {
               this.chessProvider.onePlayer = false;
-              this.toastr.success('Game starts! It is your turn!');
+              if (this.chessProvider.type === 'w'){
+                this.toastr.success('Game starts! It is your turn!');
+              }
+              else {
+                this.toastr.success('Game starts! Wait for your turn!');
+              }
               this.getBoard();
               this.timerSubscription.unsubscribe();
             }

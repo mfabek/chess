@@ -30,7 +30,7 @@ export class HomeComponent implements OnInit {
         switch (data) {
           case 0:
             this.chessProvider.name = this.form.controls.name.value;
-            this.chessProvider.type = 'w';
+            this.chessProvider.type = 'b';
             this.chessProvider.onePlayer = true;
             message = 'You created new game, please wait for another player.';
             this.router.navigate(['/game']).then();
@@ -38,7 +38,7 @@ export class HomeComponent implements OnInit {
             break;
           case 1:
             this.chessProvider.name = this.form.controls.name.value;
-            this.chessProvider.type = 'b';
+            this.chessProvider.type = 'w';
             message = 'You joined the game, now the game can start.';
             this.router.navigate(['/game']).then();
             this.toastr.success(message);
