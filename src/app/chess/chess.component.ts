@@ -48,7 +48,7 @@ export class ChessComponent implements OnInit {
         if (this.chessProvider.type !== this.playerTurn() && this.loading === false) {
           this.chessProvider.getBoard(this.chessProvider.name)
             .subscribe(data => {
-              this.board.setFEN(data);
+              this.board.move(data);
             });
         }
       });
@@ -57,7 +57,7 @@ export class ChessComponent implements OnInit {
   // when board changed we save it in database
   boardChanged(): void {
     this.loading = true;
-    const command: MovePieceCommand = new MovePieceCommand(this.chessProvider.name, this.board.getFEN());
+    const command: MovePieceCommand = new MovePieceCommand(this.chessProvider.name, this.board.getFEN(), this.board.getMoveHistory());
     this.chessProvider.boardChanged(command)
       .subscribe(() => {
         setTimeout(() => {
