@@ -28,4 +28,8 @@ export class ChessProvider {
   public boardChanged(command: MovePieceCommand): Observable<any> {
     return this.http.post(this.url + 'boardChanged', command);
   }
+
+  public reset(name: string): Observable<any> {
+    return this.http.post(this.url + 'reset', name);
+  }
 }

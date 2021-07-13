@@ -16,6 +16,7 @@ export class ChessComponent implements OnInit {
   timer2Subscription: Subscription;
   loading = false;
   checkmate = false;
+  whoWon: string;
 
   constructor(public chessProvider: ChessProvider,
               private toastr: ToastrService) {
@@ -28,10 +29,9 @@ export class ChessComponent implements OnInit {
           .subscribe((data) => {
             if (data === 2) {
               this.chessProvider.onePlayer = false;
-              if (this.chessProvider.type === 'w'){
+              if (this.chessProvider.type === 'w') {
                 this.toastr.success('Game starts! It is your turn!');
-              }
-              else {
+              } else {
                 this.toastr.success('Game starts! Wait for your turn!');
               }
               this.getBoard();
@@ -43,12 +43,17 @@ export class ChessComponent implements OnInit {
 
   // send request to backend every second when it's not your turn
   getBoard(): void {
-    this.timer2Subscription = timer(1000, 2000)
+    this.timer2Subscription = timer(1000, 1000)
       .subscribe(() => {
         if (this.chessProvider.type !== this.playerTurn() && this.loading === false) {
           this.chessProvider.getBoard(this.chessProvider.name)
             .subscribe(data => {
-              this.board.move(data);
+              if (data === '') {
+                console.log('prazno');
+                this.board.setFEN('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1');
+              } else {
+                this.board.move(data);
+              }
             });
         }
       });
@@ -59,16 +64,37 @@ export class ChessComponent implements OnInit {
     this.loading = true;
     const command: MovePieceCommand = new MovePieceCommand(this.chessProvider.name, this.board.getFEN(), this.board.getMoveHistory());
     this.chessProvider.boardChanged(command)
-      .subscribe(() => {
+      .subscribe(data => {
         setTimeout(() => {
+          if (data.isCheckmate === true) {
+            this.checkmate = true;
+            this.whoWon = data.whoWon;
+            const winner = data.whoWon === 'b' ? 'Black ' : 'White ';
+            this.toastr.success('Game over! ' + winner + 'won!');
+          }
           this.loading = false;
         }, 1000);
       });
   }
 
+  showAllMoves(): void {
+
+  }
+
+  reset(): void {
+    this.chessProvider.reset(this.chessProvider.name)
+      .subscribe(() => {
+        this.board.reset();
+        this.checkmate = false;
+        this.whoWon = '';
+      });
+  }
+
   // function to detect which player is on turn
-  private playerTurn(): string {
-    return this.board.getFEN().split(' ')[1][0];
+  playerTurn(): string {
+    if (this.board !== undefined) {
+      return this.board.getFEN().split(' ')[1][0];
+    }
   }
 
 }
