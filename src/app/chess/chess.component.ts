@@ -75,7 +75,11 @@ export class ChessComponent implements OnInit {
             const winner = data.whoWon === 'b' ? 'Black ' : 'White ';
             this.toastr.success('Game over! ' + winner + 'won!');
           }
+          else {
+            this.checkmate = false;
+          }
           this.loading = false;
+
         }, 1000);
       });
   }

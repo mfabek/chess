@@ -1,5 +1,6 @@
 <div class="container">
   <div class="div1">
+<!--    <button class="btn-3" [disabled]="checkmate" (click)="surrender()">Surrender</button>-->
     <ngx-chess-board [darkDisabled]="this.chessProvider.type === 'w' || this.chessProvider.onePlayer"
                      [lightDisabled]="this.chessProvider.type === 'b' || this.chessProvider.onePlayer"
                      [showLastMove]="false"
