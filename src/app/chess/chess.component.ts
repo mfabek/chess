@@ -89,7 +89,6 @@ export class ChessComponent implements OnInit {
     this.isVisible = true;
     this.chessProvider.getAllMoves(this.chessProvider.name)
       .subscribe(data => {
-        console.log(data);
         this.allMoveBoards = data;
         this.boardForAllMoves.setFEN(this.allMoveBoards[this.allMovesBoardIndex]);
       });
