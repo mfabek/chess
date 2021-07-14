@@ -41,3 +41,17 @@
 .container {
   height: 100%;
 }
+
+.button-left {
+  z-index: 100;
+  position: absolute;
+  left: 0;
+  top: 40%;
+}
+
+.button-right {
+  z-index: 100;
+  position: absolute;
+  right: 0;
+  top: 40%;
+}

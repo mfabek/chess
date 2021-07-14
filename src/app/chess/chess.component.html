@@ -12,3 +12,22 @@
     </div>
   </div>
 </div>
+
+<nz-modal [(nzVisible)]="isVisible" [nzFooter]="null" [nzClosable]="false"
+          [nzContent]="modalContent" (nzOnCancel)="isVisible = false;">
+  <ng-template #modalContent>
+    <nz-row style="width: auto; height: auto; justify-content: center; align-content: center">
+      <ngx-chess-board darkDisabled="true" lightDisabled="true" #boardForAllMoves>
+      </ngx-chess-board>
+      <button class="button-left" *ngIf="allMovesBoardIndex !== 0" nz-button
+              nzShape="circle" nzType="primary" (click)="loadLeftMoveBoard()">
+        <i nz-icon nzType="arrow-left" nzTheme="outline"></i>
+      </button>
+      <button class="button-right"
+              *ngIf="allMovesBoardIndex !== allMoveBoards?.length - 1"
+              nz-button nzShape="circle" nzType="primary" (click)="loadRightMoveBoard()">
+        <i nz-icon nzType="arrow-right" nzTheme="outline"></i>
+      </button>
+    </nz-row>
+  </ng-template>
+</nz-modal>

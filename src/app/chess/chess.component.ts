@@ -12,11 +12,15 @@ import {MovePieceCommand} from '../model/command/MovePieceCommand';
 })
 export class ChessComponent implements OnInit {
   @ViewChild('board', {static: false}) board: NgxChessBoardView;
+  @ViewChild('boardForAllMoves', {static: false}) boardForAllMoves: NgxChessBoardView;
   timerSubscription: Subscription;
   timer2Subscription: Subscription;
   loading = false;
   checkmate = false;
   whoWon: string;
+  isVisible = false;
+  allMovesBoardIndex = 0;
+  allMoveBoards: string[] = [];
 
   constructor(public chessProvider: ChessProvider,
               private toastr: ToastrService) {
@@ -49,7 +53,6 @@ export class ChessComponent implements OnInit {
           this.chessProvider.getBoard(this.chessProvider.name)
             .subscribe(data => {
               if (data === '') {
-                console.log('prazno');
                 this.board.setFEN('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1');
               } else {
                 this.board.move(data);
@@ -78,7 +81,13 @@ export class ChessComponent implements OnInit {
   }
 
   showAllMoves(): void {
-
+    this.isVisible = true;
+    this.chessProvider.getAllMoves(this.chessProvider.name)
+      .subscribe(data => {
+        console.log(data);
+        this.allMoveBoards = data;
+        this.boardForAllMoves.setFEN(this.allMoveBoards[this.allMovesBoardIndex]);
+      });
   }
 
   reset(): void {
@@ -88,6 +97,16 @@ export class ChessComponent implements OnInit {
         this.checkmate = false;
         this.whoWon = '';
       });
+  }
+
+  // function to load previous move
+  loadLeftMoveBoard(): void {
+    this.boardForAllMoves.setFEN(this.allMoveBoards[--this.allMovesBoardIndex]);
+  }
+
+  // function to load next move
+  loadRightMoveBoard(): void {
+    this.boardForAllMoves.setFEN(this.allMoveBoards[++this.allMovesBoardIndex]);
   }
 
   // function to detect which player is on turn

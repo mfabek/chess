@@ -32,4 +32,8 @@ export class ChessProvider {
   public reset(name: string): Observable<any> {
     return this.http.post(this.url + 'reset', name);
   }
+
+  public getAllMoves(name: string): Observable<any> {
+    return this.http.post(this.url + 'getAllMoves', name);
+  }
 }
