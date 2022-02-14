@@ -31,7 +31,6 @@ export class ChessComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.subscription = this.socketProvider.subject.subscribe((data: number) => {
-      console.log(data);
       if (+data === 2) {
         this.chessProvider.onePlayer = false;
         if (this.chessProvider.type === 'w') {
