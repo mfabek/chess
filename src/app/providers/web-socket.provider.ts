@@ -20,10 +20,11 @@ export class WebSocketProvider implements OnInit {
         const ws = new SockJS(serverUrl);
         this.stompClient = Stomp.over(ws);
 
+        const that = this;
+
         this.stompClient.connect({}, function(frame: any) {
-            this.stompClient.subscribe('/topic', (message: string) => {
-                console.log("tu smo");
-                this.subject.next(message);
+            that.stompClient.subscribe('/topic', (message: any) => {
+                that.subject.next(message.body);
             });
         });
     }
