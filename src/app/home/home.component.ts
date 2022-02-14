@@ -3,6 +3,7 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 import {ChessProvider} from '../providers/chess.provider';
 import {ToastrService} from 'ngx-toastr';
+import { WebSocketProvider } from '../providers/web-socket.provider';
 
 @Component({
   selector: 'app-home',
@@ -14,7 +15,8 @@ export class HomeComponent implements OnInit {
 
   constructor(private router: Router,
               private chessProvider: ChessProvider,
-              private toastr: ToastrService) {
+              private toastr: ToastrService,
+              private socketProvider: WebSocketProvider) {
   }
 
   ngOnInit(): void {
@@ -23,7 +25,7 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  submitForm(): void {
+  submitForm(): void {  
     this.chessProvider.join(this.form.controls.name.value)
       .subscribe((data) => {
         let message: string;
@@ -35,6 +37,7 @@ export class HomeComponent implements OnInit {
             message = 'You created new game, please wait for another player.';
             this.router.navigate(['/game']).then();
             this.toastr.success(message);
+            this.socketProvider.sendMessage(this.form.controls.name.value);
             break;
           case 1:
             this.chessProvider.name = this.form.controls.name.value;
@@ -42,6 +45,7 @@ export class HomeComponent implements OnInit {
             message = 'You joined the game, now the game can start.';
             this.router.navigate(['/game']).then();
             this.toastr.success(message);
+            this.socketProvider.sendMessage(this.form.controls.name.value);
             break;
           case 2:
             message = 'This game already has two players.';

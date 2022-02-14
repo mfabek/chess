@@ -1,16 +1,17 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ChessProvider} from '../providers/chess.provider';
 import {ToastrService} from 'ngx-toastr';
 import {Subscription, timer} from 'rxjs';
 import {NgxChessBoardView} from 'ngx-chess-board';
 import {MovePieceCommand} from '../model/command/MovePieceCommand';
+import { WebSocketProvider } from '../providers/web-socket.provider';
 
 @Component({
   selector: 'app-chess',
   templateUrl: './chess.component.html',
   styleUrls: ['./chess.component.scss']
 })
-export class ChessComponent implements OnInit {
+export class ChessComponent implements OnInit, OnDestroy {
   @ViewChild('board', {static: false}) board: NgxChessBoardView;
   @ViewChild('boardForAllMoves', {static: false}) boardForAllMoves: NgxChessBoardView;
   timerSubscription: Subscription;
@@ -21,28 +22,47 @@ export class ChessComponent implements OnInit {
   isVisible = false;
   allMovesBoardIndex = 0;
   allMoveBoards: string[] = [];
+  subscription: Subscription;
 
   constructor(public chessProvider: ChessProvider,
-              private toastr: ToastrService) {
+              private toastr: ToastrService,
+              private socketProvider: WebSocketProvider) {
   }
 
   ngOnInit(): void {
-    this.timerSubscription = timer(1000, 1000)
-      .subscribe(() => {
-        this.chessProvider.getCount(this.chessProvider.name)
-          .subscribe((data) => {
-            if (data === 2) {
-              this.chessProvider.onePlayer = false;
-              if (this.chessProvider.type === 'w') {
-                this.toastr.success('Game starts! It is your turn!');
-              } else {
-                this.toastr.success('Game starts! Wait for your turn!');
-              }
-              this.getBoard();
-              this.timerSubscription.unsubscribe();
-            }
-          });
-      });
+    this.subscription = this.socketProvider.subject.subscribe((data: number) => {
+      console.log(data);
+      if (data === 2) {
+        this.chessProvider.onePlayer = false;
+        if (this.chessProvider.type === 'w') {
+          this.toastr.success('Game starts! It is your turn!');
+        } else {
+          this.toastr.success('Game starts! Wait for your turn!');
+        }
+        this.getBoard();
+      }
+    });
+
+    // this.timerSubscription = timer(1000, 1000)
+    //   .subscribe(() => {
+    //     this.chessProvider.getCount(this.chessProvider.name)
+    //       .subscribe((data) => {
+    //         if (data === 2) {
+    //           this.chessProvider.onePlayer = false;
+    //           if (this.chessProvider.type === 'w') {
+    //             this.toastr.success('Game starts! It is your turn!');
+    //           } else {
+    //             this.toastr.success('Game starts! Wait for your turn!');
+    //           }
+    //           this.getBoard();
+    //           this.timerSubscription.unsubscribe();
+    //         }
+    //       });
+    //   });
+  }
+
+  ngOnDestroy(): void {
+      this.subscription.unsubscribe();
   }
 
   // send request to backend every second when it's not your turn
