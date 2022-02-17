@@ -6,6 +6,7 @@ import * as SockJS from 'sockjs-client';
 @Injectable({ providedIn: 'root' })
 export class WebSocketProvider implements OnInit {
     public subject = new BehaviorSubject(-1);
+    public subject2: BehaviorSubject<string> = new BehaviorSubject<string>(null);
     public stompClient: any = null;
 
     constructor() {
@@ -26,11 +27,18 @@ export class WebSocketProvider implements OnInit {
             this.stompClient.subscribe('/topic', (message: any) => {
                 this.subject.next(message.body);
             });
+            this.stompClient.subscribe('/topic2', (message: any) => {
+                this.subject2.next(message.body);
+            });
         });
     }
 
-    sendMessage(name: string): void {
+    sendCountMessage(name: string): void {
         this.stompClient.send('/chess/getCount', {}, name);
+    }
+
+    sendBoardMessage(name: string): void {
+        this.stompClient.send('/chess/getBoard', {}, name);
     }
 
     disconnect(): void {

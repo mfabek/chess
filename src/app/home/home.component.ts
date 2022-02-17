@@ -37,7 +37,7 @@ export class HomeComponent implements OnInit {
             message = 'You created new game, please wait for another player.';
             this.router.navigate(['/game']).then();
             this.toastr.success(message);
-            this.socketProvider.sendMessage(this.form.controls.name.value);
+            this.socketProvider.sendCountMessage(this.form.controls.name.value);
             break;
           case 1:
             this.chessProvider.name = this.form.controls.name.value;
@@ -45,7 +45,7 @@ export class HomeComponent implements OnInit {
             message = 'You joined the game, now the game can start.';
             this.router.navigate(['/game']).then();
             this.toastr.success(message);
-            this.socketProvider.sendMessage(this.form.controls.name.value);
+            this.socketProvider.sendCountMessage(this.form.controls.name.value);
             break;
           case 2:
             message = 'This game already has two players.';

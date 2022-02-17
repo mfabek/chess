@@ -66,19 +66,30 @@ export class ChessComponent implements OnInit, OnDestroy {
 
   // send request to backend every second when it's not your turn
   getBoard(): void {
-    this.timer2Subscription = timer(1000, 1000)
-      .subscribe(() => {
+    this.socketProvider.subject2
+      .subscribe((data: string) => {
         if (this.chessProvider.type !== this.playerTurn() && this.loading === false) {
-          this.chessProvider.getBoard(this.chessProvider.name)
-            .subscribe(data => {
-              if (data === '') {
-                this.board.setFEN('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1');
-              } else {
-                this.board.move(data);
-              }
-            });
+          if (data === '') {
+            this.board.setFEN('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1');
+          } else {
+            this.board.move(data);
+          }
         }
       });
+
+    // this.timer2Subscription = timer(1000, 1000)
+    //   .subscribe(() => {
+    //     if (this.chessProvider.type !== this.playerTurn() && this.loading === false) {
+    //       this.chessProvider.getBoard(this.chessProvider.name)
+    //         .subscribe(data => {
+    //           if (data === '') {
+    //             this.board.setFEN('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1');
+    //           } else {
+    //             this.board.move(data);
+    //           }
+    //         });
+    //     }
+    //   });
   }
 
   // when board changed we save it in database
@@ -87,7 +98,8 @@ export class ChessComponent implements OnInit, OnDestroy {
     const command: MovePieceCommand = new MovePieceCommand(this.chessProvider.name, this.board.getFEN(), this.board.getMoveHistory());
     this.chessProvider.boardChanged(command)
       .subscribe(data => {
-        setTimeout(() => {
+        this.socketProvider.sendBoardMessage(this.chessProvider.name);
+        // setTimeout(() => {
           if (data.isCheckmate === true) {
             this.checkmate = true;
             this.whoWon = data.whoWon;
@@ -100,7 +112,7 @@ export class ChessComponent implements OnInit, OnDestroy {
           }
           this.loading = false;
 
-        }, 1000);
+        // }, 1000);
       });
   }
 
@@ -114,12 +126,14 @@ export class ChessComponent implements OnInit, OnDestroy {
   }
 
   reset(): void {
+    console.log("tu smo");
     this.chessProvider.reset(this.chessProvider.name)
       .subscribe(() => {
         this.board.reset();
         this.checkmate = false;
         this.whoWon = '';
         this.allMovesBoardIndex = 0;
+        this.socketProvider.sendBoardMessage(this.chessProvider.name);
       });
   }
 
