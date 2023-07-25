@@ -17,7 +17,7 @@ export class WebSocketProvider implements OnInit {
     }
 
     initializeWebSocketConnection(): void {
-        const serverUrl = 'http://localhost:8080/socket';
+        const serverUrl = 'https://localhost:8443/socket';
         const ws = new SockJS(serverUrl);
         this.stompClient = Stomp.over(ws);
 

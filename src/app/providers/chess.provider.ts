@@ -8,7 +8,7 @@ export class ChessProvider {
   public name: string;
   public onePlayer = false; // if there is only one player in room
   public type: string; // what player are you, black or white
-  private url = 'http://localhost:8080/chess/';
+  private url = 'https://localhost:8443/chess/';
 
   constructor(private http: HttpClient) {
   }
