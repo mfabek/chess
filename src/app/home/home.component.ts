@@ -4,6 +4,7 @@ import {Router} from '@angular/router';
 import {ChessProvider} from '../providers/chess.provider';
 import {ToastrService} from 'ngx-toastr';
 import { WebSocketProvider } from '../providers/web-socket.provider';
+import { SseService } from '../providers/sseHandlers';
 
 @Component({
   selector: 'app-home',
@@ -16,7 +17,8 @@ export class HomeComponent implements OnInit {
   constructor(private router: Router,
               private chessProvider: ChessProvider,
               private toastr: ToastrService,
-              private socketProvider: WebSocketProvider) {
+              private socketProvider: WebSocketProvider,
+              private sseService: SseService) {
   }
 
   ngOnInit(): void {
@@ -37,7 +39,7 @@ export class HomeComponent implements OnInit {
             message = 'You created new game, please wait for another player.';
             this.router.navigate(['/game']).then();
             this.toastr.success(message);
-            this.socketProvider.sendCountMessage(this.form.controls.name.value);
+            this.sseService.establishSseConnection(this.chessProvider.name);
             break;
           case 1:
             this.chessProvider.name = this.form.controls.name.value;
@@ -45,7 +47,8 @@ export class HomeComponent implements OnInit {
             message = 'You joined the game, now the game can start.';
             this.router.navigate(['/game']).then();
             this.toastr.success(message);
-            this.socketProvider.sendCountMessage(this.form.controls.name.value);
+            this.toastr.success('Game starts! Wait for your turn!');
+            this.sseService.establishSseConnection(this.chessProvider.name);
             break;
           case 2:
             message = 'This game already has two players.';

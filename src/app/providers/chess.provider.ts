@@ -2,27 +2,19 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {MovePieceCommand} from '../model/command/MovePieceCommand';
+import { environment } from 'src/environments/environment';
 
 @Injectable({providedIn: 'root'})
 export class ChessProvider {
   public name: string;
   public onePlayer = false; // if there is only one player in room
   public type: string; // what player are you, black or white
-  private url = 'https://localhost:8443/chess/';
+  private url = environment.url + 'chess/';
 
-  constructor(private http: HttpClient) {
-  }
+  constructor(private http: HttpClient) {}
 
   public join(name: string): Observable<any> {
     return this.http.post(this.url + 'join', name);
-  }
-
-  public getCount(name: string): Observable<any> {
-    return this.http.post(this.url + 'getCount', name);
-  }
-
-  public getBoard(name: string): Observable<any> {
-    return this.http.post(this.url + 'getBoard', name, {responseType: 'text'});
   }
 
   public boardChanged(command: MovePieceCommand): Observable<any> {
