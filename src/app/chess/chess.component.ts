@@ -50,7 +50,6 @@ export class ChessComponent implements OnInit, OnDestroy {
   getBoard(): void {
     this.sseService.boardSubject
       .subscribe((data: string) => {
-        console.log(data)
         // if (this.chessProvider.type !== this.playerTurn() && this.loading === false) {
           if (data === '') {
             this.board.setFEN('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1');
